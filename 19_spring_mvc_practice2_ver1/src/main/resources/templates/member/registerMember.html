@@ -52,80 +52,35 @@
 	let isPassId = false;
 	let isPassPasswd = false;
 	
-	$().ready(function() {
-		
+	$(function(){
+		//아이디 중복확인 
+		//  주어       . 동사();
 		$("#isValidId").click(function(){
+			 let memberId= $("#memberId").val();// 실제 입력값을 가져온다.
+			 if(memberId == ''){ // 빈값일때
+						$("#isValidIdMsg").html("<span style='color:red'>아이디를 입력하세요!</span>");			 
+			 return; // 1) 값을반환함 2) 종료함(break;)
+			 }
+			 
+			 $.ajax({
+				 //데이터 보내기
+				 // 여기서부터
+				 type:"post",
+				 
+				 
+			 });
+			 
+			 
 			
-			let memberId = $("#memberId").val();
-		    if (memberId == '') {
-		    	$("#isValidIdMsg").html("<span style='color:red;'>아이디를 입력하세요.</span>");
-		   		return;
-		    }
-		   
-		    $.ajax({
-		    	
-		       type : "post",
-		       url : "/member/validId",
-		       data : {"memberId" : memberId},
-		       success : function(isValidId) {
-		    	   
-		          if (isValidId == "y") {
-		          	$("#isValidIdMsg").html("<span style='color:green;'>사용가능한 아이디입니다.</span>");
-		          	isPassId = true;
-		          }
-		          else {
-	        		$("#isValidIdMsg").html("<span style='color:red;'>중복된 아이디입니다.</span>");
-	        		isPassId = false;
-		          }
-		          
-		       }
-		       
-		    });
-		    
-		});	
-		
-		
-		
-		$("#confirmPasswd").blur(function(){
-			
-			let passwd = $("#passwd").val();
-			let confirmPasswd = $("#confirmPasswd").val();
-			
-			if (passwd == confirmPasswd) {
-				$("#isValidPasswdMsg").html("<span style='color:green;'>패스워드가 일치합니다.</span>");
-				isPassPasswd = true;
-			}
-			else {
-				$("#isValidPasswdMsg").html("<span style='color:red;'>패스워드가 일치하지 않습니다.</span>");
-				isPassPasswd = false;
-			}
-			
-		});	
-		
+		});
 	});
-	
-	
-	function checkFormValidation() {
-
-		if (!isPassId) {
-			alert("아이디를 확인해주세요.");
-			$("#memberId").focus();
-			return false;
-		}
-		
-		if (!isPassPasswd) {
-			alert("패스워드를 확인해주세요.");
-			$("#confirmPasswd").focus();
-			return false;
-		}
-	}
 	
 	
 </script>
 </head>
 <body>
 
-	<div align="center">
+	<div align="center">		<!-- 유효성 체크 (애초에 진상손님 받지마라) -->
 		<form th:action="@{/member/registerMember}" th:onsubmit="return checkFormValidation();" method="post" enctype="multipart/form-data">
 			<h3>회원가입</h3>
 			<table border="1">
@@ -139,7 +94,7 @@
 			    </tr>
 		        <tr>
 			        <td>비밀번호</td>
-			        <td><input type="password" id="passwd" name="passwd" placeholder="비밀번호" required/></td>
+			        <td><input type="password" id="SMSSTS_YNpasswd" name="passwd" placeholder="비밀번호" required/></td>
 		        </tr>
 		        <tr>
 			        <td>비밀번호 확인</td>

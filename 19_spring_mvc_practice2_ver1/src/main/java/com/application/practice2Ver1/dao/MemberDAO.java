@@ -2,7 +2,11 @@ package com.application.practice2Ver1.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.application.practice2Ver1.dto.MemberDTO;
+
 @Mapper
 public interface MemberDAO {
+
+	public void createMember(MemberDTO memberDTO);
 
 }

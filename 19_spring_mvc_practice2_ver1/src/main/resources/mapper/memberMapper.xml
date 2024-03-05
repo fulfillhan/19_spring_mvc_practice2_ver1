@@ -2,4 +2,42 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.application.practice2Ver1.dao.MemberDAO">
 
+<insert id="createMember" parameterType="MemberDTO">
+INSERT INTO MEMBER(
+	MEMBER_ID,
+	PASSWD,
+	PROFILE_ORIGINAL_NAME,
+	PROFILE_UUID,
+	MEMBER_NM,
+	SEX,
+	BIRTH_AT,
+	HP,
+	SMSSTS_YN,
+	EMAIL,
+	EMAILSTS_YN,
+	ZIPCODE,
+	ROAD_ADDRESS,
+	JIBUN_ADDRESS,
+	NAMUJI_ADDRESS,
+	ETC
+)
+VALUES(
+	#{memberId},
+	#{passwd},
+	#{profileOriginalName},
+	#{profileUUID},
+	#{memberNm},
+	#{sex},
+	#{birthAt},
+	#{hp},
+	#{smsstsYn},
+	#{email},
+	#{emailstsYn},
+	#{zipcode},
+	#{roadAddress},
+	#{jibunAddress},
+	#{namujiAddress},
+	#{etc}
+)
+</insert>
 </mapper>
