@@ -73,7 +73,18 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public boolean login(MemberDTO memberDTO) {
-		//여기서부터 업데이트
+		
+		// 아이디를 매개변수로 넣어서 암호화된 비번과 활동상태여부를 가지고온다. BoardDTO로 가져오기
+		 MemberDTO validateData= memberDAO.login(memberDTO.getMemberId());
+		
+		// 데이터베이스에서 가지고온 패스워드의 암호화를 비교한다.(null 이아니여야 한다)
+		 if(validateData != null) {
+			 // 비교가 참/거짓인지 확인후 반환한다.
+			 if(passwordEncoder.matches(memberDTO.getPasswd(), validateData.getPasswd()) && validateData.getActiveYn().equals("y")) {
+				 return true;
+			 }
+		 }
+		 
 		return false;
 	}
 	

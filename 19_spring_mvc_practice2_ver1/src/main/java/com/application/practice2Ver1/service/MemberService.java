@@ -6,6 +6,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.application.practice2Ver1.dto.MemberDTO;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 public interface MemberService {
 
 	public void createMember(MultipartFile uploadProfile, MemberDTO memberDTO) throws IllegalStateException, IOException;

@@ -11,8 +11,8 @@
 		$("#loginBtn").click(function(){
 			//아이디와 패스워드 모두 보내기
 			let loginData={
-				"memberId" : $("#memberId").val(),
-				"passwd" : $("#passwd").val(),//, 의 쓰임
+				"memberId" : $("[name='memberId']").val(),
+				"passwd" : $("[name='passwd']").val()
 			}
 			
 			$.ajax({
@@ -20,7 +20,15 @@
 				type : "post",
 				contentType : "application/json", // 서버로 전송할 데이터 타입/ 객체화 할때는 명시해야한다.
 				data : JSON.stringify(loginData), // 문자열을 직열활하여 데이터를 서버로 보낸다.
-				success : function(){
+				success : function(isValidMember){
+					
+					if(isValidMember == "y"){
+						location.href="/member/mainMember";// 홈화면으로 이동
+						
+					}
+					else{
+						$("#failMsg").html("<span style='color:red;'>아이디와 패스워드를 확인하세요!</span>");
+					}
 					
 				}
 			});

@@ -42,11 +42,23 @@ VALUES(
 </insert>
 
 <select id="checkValidId" parameterType="String" resultType="String">
-SELECT MEMBER_ID
-FROM MEMBER
-WHERE MEMBER_ID = #{memberId}
+SELECT 
+		MEMBER_ID
+FROM 
+		MEMBER
+WHERE 
+		MEMBER_ID = #{memberId}
 </select>
 
-<
+<select id="login" parameterType="String" resultType="MemberDTO">
+SELECT 
+		PASSWD,
+		ACTIVE_YN
+FROM 
+		MEMBER
+WHERE 
+		MEMBER_ID = #{memberId}
+
+</select>
 
 </mapper>

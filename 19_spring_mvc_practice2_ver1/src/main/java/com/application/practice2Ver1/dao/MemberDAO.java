@@ -10,4 +10,6 @@ public interface MemberDAO {
 	public void createMember(MemberDTO memberDTO);
 
 	public String checkValidId(String memberId);
+
+	public MemberDTO login(String memberId);
 }

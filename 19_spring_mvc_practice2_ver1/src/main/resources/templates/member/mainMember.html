@@ -10,7 +10,7 @@
 	
 		<img th:src="@{/img/member.PNG}"/>
 		
-		<div th:if="${session.memberId == null}">
+		<div th:if="${session.memberId == null}" >
 			<p><a th:href="@{/member/registerMember}">회원가입</a></p>
 			<p><a th:href="@{/member/loginMember}">로그인</a></p>
 		</div>
