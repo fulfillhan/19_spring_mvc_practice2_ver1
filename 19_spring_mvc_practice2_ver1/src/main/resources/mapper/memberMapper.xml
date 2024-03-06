@@ -40,4 +40,13 @@ VALUES(
 	#{etc}
 )
 </insert>
+
+<select id="checkValidId" parameterType="String" resultType="String">
+SELECT MEMBER_ID
+FROM MEMBER
+WHERE MEMBER_ID = #{memberId}
+</select>
+
+<
+
 </mapper>

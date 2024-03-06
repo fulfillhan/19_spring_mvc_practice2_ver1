@@ -59,6 +59,23 @@ public class MemberServiceImpl implements MemberService {
 		memberDAO.createMember(memberDTO);
 		
 	}
+
+	@Override
+	public String checkValidId(String memberId) {
+		// 기본값
+		String isVlidId = "y";// 유효한 경우
+		if(memberDAO.checkValidId(memberId) != null) {// 데이터에 있는 아이디가 빈값이 아니라면 즉 아이디가 하나라도 있는경우
+			isVlidId = "n";
+		}
+		
+		return isVlidId;
+	}
+
+	@Override
+	public boolean login(MemberDTO memberDTO) {
+		//여기서부터 업데이트
+		return false;
+	}
 	
 
 }

@@ -9,4 +9,5 @@ public interface MemberDAO {
 
 	public void createMember(MemberDTO memberDTO);
 
+	public String checkValidId(String memberId);
 }

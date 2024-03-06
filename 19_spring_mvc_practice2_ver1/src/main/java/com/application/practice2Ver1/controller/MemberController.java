@@ -7,12 +7,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.application.practice2Ver1.dto.MemberDTO;
 import com.application.practice2Ver1.service.MemberService;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/member")
@@ -38,7 +42,12 @@ public class MemberController {
 	}
 	
 	// AJAX의 validId 아이디 유효성 로직 작성하기
-	//@PostMapping("/validId")
+	@PostMapping("/validId")
+	@ResponseBody// AJAX 에서 @GET일때가 아닌  @POST일때도 사용되는 이유는? 
+	public String validId(@RequestParam("memberId") String memberId) {// 단일 데이터 받기
+		return memberService.checkValidId(memberId);
+		
+	}
 	
 	@GetMapping("/loginMember")
 	public String loginMember () {
@@ -46,9 +55,14 @@ public class MemberController {
 	}
 	
 	// AJAX로 아이디 확인하는 로직 작성하기
-//	@PostMapping("/loginMember")
-//	public String loginMember() {
-//		
-//	}	
+	/*
+	 * @PostMapping("/loginMember") public String loginMember(@RequestBody MemberDTO
+	 * memberDTO, HttpServletRequest request ) { // HttpServletRequest request
+	 * 사용한이유는? 아이디를 세션으로 저장하기위해
+	 * 
+	 * String isValidMember = "n"; if(memberService.login(memberDTO)) {
+	 * 
+	 * } }
+	 */
 }
 

@@ -52,6 +52,20 @@
 	let isPassId = false;
 	let isPassPasswd = false;
 	
+	//별도의 form 체크
+	function checkFormValidation(){
+		if(!isPassId){
+			alert("아이디를 확인해주세요");
+			$("#memberId").focus();
+			return false;
+		}
+		if(!isPassPasswd){
+			alert("비밀번호를 확인해주세요");
+			$("#passwd").focus();
+			return false;
+		}
+	}
+	
 	$(function(){
 		//아이디 중복확인 
 		//  주어       . 동사();
@@ -63,18 +77,43 @@
 			 }
 			 
 			 $.ajax({
-				 //데이터 보내기
-				 // 여기서부터
+				 //단일 데이터 보내기
 				 type:"post",
-				 
+				 url:"/member/validId",
+				 data:{"memberId":memberId},
+				 success : function(isvalidId){
+					
+					if(isvalidId == "y"){
+						$("#isValidIdMsg").html("<span style='color:green;'>사용가능한 아이디입니다.</span>");
+						isPassId = true;
+					}
+				else {
+						 $("#isValidIdMsg").html("<span style='color:red;'>중복된 아이디입니다.</span>");
+					    isPassId = false;
+					 }
+				 }
 				 
 			 });
+		 });
+		 
+		 //비밀번호 확인
+		 $("#confirmPasswd").blur(function(){  // 포커스를 잃을때 동작한다.
+			 let passwd = $("#passwd").val();
+			 let confirmPasswd =  $("#confirmPasswd").val();
 			 
-			 
-			
-		});
-	});
-	
+			 if(passwd == confirmPasswd){
+				 $("#isValidPasswdMsg").html("<span style='color: green;'> 패스워드가 일치합니다.</span>");
+				 isPassPasswd = true;
+			 }
+			 else {
+				 $("#isValidPasswdMsg").html("<span style='color:red;'> 패스워드가 불일치합니다.</span>");
+				 isPassPasswd = false;
+			 }
+		 });
+		 
+	 });
+	 
+	 
 	
 </script>
 </head>

@@ -10,4 +10,8 @@ public interface MemberService {
 
 	public void createMember(MultipartFile uploadProfile, MemberDTO memberDTO) throws IllegalStateException, IOException;
 
+	public String checkValidId(String memberId);
+
+	public boolean login(MemberDTO memberDTO);
+
 }
