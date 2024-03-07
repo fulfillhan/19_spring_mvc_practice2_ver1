@@ -104,8 +104,8 @@ public class MemberController {
 	  }
 	  
 	  @GetMapping("/thumbnails")
-	  @ResponseBody // 
-	  public Resource thumbnails(@RequestParam("fileName") String fileName) throws IOException {//throws MalformedURLException IOException 다르게나옴..
+	  @ResponseBody 
+	  public Resource thumbnails(@RequestParam("fileName") String fileName) throws MalformedURLException  {//throws MalformedURLException IOException 다르게나옴..
 		  return new UrlResource("file:"+fileRepositoryPath+fileName);// new UrlResource("file:" + 파일접근경로) 객체로 반환하여 view전달
 	  }
 	  
@@ -124,11 +124,23 @@ public class MemberController {
 	  // xml로직 확인하기
 	  
 	  @GetMapping("/deleteMember")
-	  public String deleteMember() {
+	  public String deleteMember() { // 해당로직에서는 저장된세션아이디로 정보를 받을 필요가 없다.
 		  return "member/deleteMemeber";
 	  }
 	  
-	  //@PostMapping("deleteMember")  여기서부터
+	  @PostMapping("deleteMember") 
+	  public String deleteMember(HttpServletRequest request) {
+		  
+		  HttpSession session = request.getSession();
+		  //session.getAttribute("memberId");
+		  memberService.updateInactiveMember((String)session.getAttribute("memberId"));// 비활성화로 바꾸기
+		  
+		  // 세션의 속성제거
+		  session.invalidate();
+		  
+		  return "member/mainMember";
+		  
+	  }
 	  
 	  
 }

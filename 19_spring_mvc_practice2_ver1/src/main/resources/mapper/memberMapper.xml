@@ -121,4 +121,24 @@ WHERE
 		MEMBER_ID = #{memberId}
 </update>
 
+<update id="updateInactiveMember" parameterType="String">
+UPDATE
+	 	MEMBER
+SET 
+		ACTIVE_YN = 'n',
+		INACTIVE_AT = NOW()
+WHERE 
+		MEMBER_ID = #{memberId}
+</update>
+
+<select id="getTodayNewMemberCnt" parameterType="String" resultType="int">
+SELECT 
+		COUNT(MEMBER_ID)
+FROM 
+		MEMBER
+WHERE 
+		LEFT(JOIN_AT , 10) = #{today}
+<!-- LEFT(컬럼명, 가져올갯수) : 왼쪽부터-->
+</select>
+
 </mapper>

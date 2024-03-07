@@ -16,4 +16,8 @@ public interface MemberDAO {
 	public MemberDTO getMemberDetail(String memberId);
 
 	public void updateMember(MemberDTO memberDTO);
+
+	public void updateInactiveMember(String memberId);// 비활성화 + 시간 수정하기
+
+	public int getTodayNewMemberCnt(String today);
 }

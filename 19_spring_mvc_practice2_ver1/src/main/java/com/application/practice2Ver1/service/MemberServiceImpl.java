@@ -2,12 +2,15 @@ package com.application.practice2Ver1.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -120,6 +123,38 @@ public class MemberServiceImpl implements MemberService {
 		
 		memberDAO.updateMember(memberDTO);
 	
+	}
+
+	@Override
+	public void updateInactiveMember(String memberId) {
+		memberDAO.updateInactiveMember(memberId);
+		
+	}
+
+	@Override
+	@Scheduled(cron="")
+	public void getTodayNewMemberCnt() {
+		
+		/*# 시간 출력 형식 SimpleDateFormat
+		 *   
+		 *   - 날짜 및 시간 출력 서식 지정 방법은 SimpleDateFormat 객체를 사용하여 구현한다.
+		 *  - SimpleDateFormat 변수명 = new SimpleDateFormat("날짜 및 시간 서식"); 형태로 객체를 생성한다.
+		 *   - sdf.format(date); 메서드를 사용하여 날짜 표현식을 지정한다.
+		 *   - 상세 서식은 구글에서 "simpledateformat 형식"을 검색하여 사용한다.
+		 *   - 중요)날짜타입 데이터에서 글자타입으로 데이터의 형이 변환된다.*/
+		
+		SimpleDateFormat sdf = new SimpleDateFormat();
+		String today = sdf.format(new Date());//현재 시간 설정
+		
+		//logger.info("메시지 작성");
+		logger.info("("+ today+") 신규회원수 : "+ memberDAO.getTodayNewMemberCnt(today));
+	}
+
+	@Override
+	@Scheduled(cron="")
+	public void deleteMemberScheduler() {
+		
+		
 	}
 	
 	
