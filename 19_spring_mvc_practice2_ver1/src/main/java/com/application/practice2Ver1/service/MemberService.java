@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.application.practice2Ver1.dto.MemberDTO;
 
-import jakarta.servlet.http.HttpServletRequest;
+
 
 public interface MemberService {
 
@@ -15,5 +15,11 @@ public interface MemberService {
 	public String checkValidId(String memberId);
 
 	public boolean login(MemberDTO memberDTO);
+
+	public MemberDTO getMemberDetail(String memberId);
+
+	public void updateMember(MultipartFile uploadProfile, MemberDTO memberDTO) throws IllegalStateException, IOException;
+
+
 
 }

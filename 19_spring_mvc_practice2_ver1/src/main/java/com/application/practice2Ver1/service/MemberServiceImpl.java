@@ -87,6 +87,43 @@ public class MemberServiceImpl implements MemberService {
 		 
 		return false;
 	}
+
+	@Override
+	public MemberDTO getMemberDetail(String memberId) {
+		
+		return memberDAO.getMemberDetail(memberId);
+	}
+
+	@Override
+	public void updateMember(MultipartFile uploadProfile, MemberDTO memberDTO) throws IllegalStateException, IOException {
+	
+		if(!uploadProfile.isEmpty()) {
+//			File deleteFile = new File(fileRepositoryPath+memberDTO.getProfileUUID());
+//			deleteFile.delete();
+			
+			new File(fileRepositoryPath+memberDTO.getProfileUUID()).delete();// 기존 파일 삭제하기
+			
+			//파일 재생성하기
+			 String originalFileName = uploadProfile.getOriginalFilename();
+			 memberDTO.setProfileOriginalName(originalFileName);
+			 
+			 String extension = originalFileName.substring(originalFileName.indexOf("."));
+			 
+			 String updateUploadFile= UUID.randomUUID()+extension;
+			 memberDTO.setProfileUUID(updateUploadFile);
+			 
+			 uploadProfile.transferTo(new File(fileRepositoryPath+updateUploadFile));
+		}
+		
+		if(memberDTO.getSmsstsYn() == null) memberDTO.setSmsstsYn("n");
+		if(memberDTO.getEmailstsYn() == null) memberDTO.setSmsstsYn("n");
+		
+		memberDAO.updateMember(memberDTO);
+	
+	}
+	
+	
 	
 
 }
+ 

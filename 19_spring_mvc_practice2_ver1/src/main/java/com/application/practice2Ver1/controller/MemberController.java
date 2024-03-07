@@ -1,9 +1,14 @@
 package com.application.practice2Ver1.controller;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +27,9 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/member")
 public class MemberController {
+	
+	@Value("${file.repo.path}")
+	private String fileRepositoryPath;
 
 	@Autowired
 	private MemberService memberService;
@@ -84,5 +92,43 @@ public class MemberController {
 		  
 		  return "redirect:/member/mainMember";
 	  }
-	 
+	  
+	  @GetMapping("/udpateMember")
+	  public String udpateMember(HttpServletRequest request, Model model) {
+		  
+		  HttpSession session = request.getSession();// 세션 호출하기
+		  model.addAttribute("memberDTO",memberService.getMemberDetail((String)session.getAttribute("memberId")));
+		  // session.getAttribute 기본 반환값은 object이다-> 형변환필요
+		  return "member/udpateMember";
+		  
+	  }
+	  
+	  @GetMapping("/thumbnails")
+	  @ResponseBody // 
+	  public Resource thumbnails(@RequestParam("fileName") String fileName) throws IOException {//throws MalformedURLException IOException 다르게나옴..
+		  return new UrlResource("file:"+fileRepositoryPath+fileName);// new UrlResource("file:" + 파일접근경로) 객체로 반환하여 view전달
+	  }
+	  
+	  @PostMapping("/updateMember")
+	  public String updateMember(@RequestParam("uploadProfile") MultipartFile uploadProfile, @ModelAttribute MemberDTO memberDTO) throws IllegalStateException, IOException {
+		  
+		//smsstsYn,emailstsYn 없다면 'n'로 지정해주기
+		//createBoard에서의 해당구문은 service에 있었는데, controller에 있는이유는? 
+		
+		  memberService.updateMember(uploadProfile,memberDTO);
+		  
+		  return "redirect:mainMember"; //업데이트 하고 홈화면으로 돌아가기
+		  
+	  }
+	  
+	  // xml로직 확인하기
+	  
+	  @GetMapping("/deleteMember")
+	  public String deleteMember() {
+		  return "member/deleteMemeber";
+	  }
+	  
+	  //@PostMapping("deleteMember")  여기서부터
+	  
+	  
 }

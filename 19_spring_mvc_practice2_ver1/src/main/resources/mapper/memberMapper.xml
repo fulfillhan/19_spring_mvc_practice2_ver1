@@ -61,4 +61,64 @@ WHERE
 
 </select>
 
+<select id="getMemberDetail" parameterType="String" resultType="MemberDTO">
+SELECT 
+		*
+FROM 
+		MEMBER
+WHERE 
+		MEMBER_ID=#{memberId}
+</select>
+
+<update id="updateMember" parameterType="MemberDTO">
+UPDATE 
+		MEMBER
+<set>
+	<if test="profileOriginalName ! = null and profileOriginalName != ''">
+		PROFILE_ORIGINAL_NAME = #{profileOrginalName},
+	</if>
+	<if test="profileUUID ! = null and profileUUID != ''">
+		PROFILE_UUID = #{profileUUID},
+	</if>
+	<if test="memberNm ! = null and memberNm != ''">
+		MEMBER_NM = #{memberNm},
+	</if>
+	<if test='sex != null and !sex.equals("")'>
+				SEX = #{sex}, 
+	</if>
+	<if test='birthAt != null and !birthAt.equals("")'>
+		BIRTH_AT = #{birthAt}, 
+	</if>
+	<if test='hp != null and !hp.equals("")'>
+		HP = #{hp},  
+	</if>
+	<if test='smsstsYn != null and !smsstsYn.equals("")'>
+		SMSSTS_YN = #{smsstsYn},  
+	</if>
+	<if test='email != null and !email.equals("")'>
+		EMAIL = #{email}, 
+	</if>
+	<if test='emailstsYn != null and !emailstsYn.equals("")'>
+		EMAILSTS_YN = #{emailstsYn},  
+	</if>
+	<if test='zipcode != null and !zipcode.equals("")'>
+		ZIPCODE = #{zipcode},  
+	</if>
+	<if test='roadAddress != null and !roadAddress.equals("")'>
+		ROAD_ADDRESS = #{roadAddress},
+	</if>
+	<if test='jibunAddress != null and !jibunAddress.equals("")'>
+		JIBUN_ADDRESS = #{jibunAddress},  
+	</if>
+	<if test='namujiAddress != null and !namujiAddress.equals("")'>
+		NAMUJI_ADDRESS = #{namujiAddress},  
+	</if>
+	<if test='etc != null and !etc.equals("")'>
+		ETC = #{etc}
+	</if>
+</set>
+WHERE
+		MEMBER_ID = #{memberId}
+</update>
+
 </mapper>
