@@ -52,19 +52,6 @@
 	let isPassId = false;
 	let isPassPasswd = false;
 	
-	//별도의 form 체크
-	function checkFormValidation(){
-		if(!isPassId){
-			alert("아이디를 확인해주세요");
-			$("#memberId").focus();
-			return false;
-		}
-		if(!isPassPasswd){
-			alert("비밀번호를 확인해주세요");
-			$("#passwd").focus();
-			return false;
-		}
-	}
 	
 	$(function(){
 		//아이디 중복확인 
@@ -113,6 +100,20 @@
 		 
 	 });
 	 
+	 //별도의 form 체크
+	function checkFormValidation(){
+		if(!isPassId){
+			alert("아이디를 확인해주세요");
+			$("#memberId").focus();
+			return false;
+		}
+		if(!isPassPasswd){
+			alert("비밀번호를 확인해주세요");
+			$("#confirmPasswd").focus();
+			return false;
+		}
+	}
+	 
 </script>
 </head>
 <body>
@@ -131,7 +132,7 @@
 			    </tr>
 		        <tr>
 			        <td>비밀번호</td>
-			        <td><input type="password" id="SMSSTS_YNpasswd" name="passwd" placeholder="비밀번호" required/></td>
+			        <td><input type="password" id="passwd" name="passwd" placeholder="비밀번호" required/></td>
 		        </tr>
 		        <tr>
 			        <td>비밀번호 확인</td>

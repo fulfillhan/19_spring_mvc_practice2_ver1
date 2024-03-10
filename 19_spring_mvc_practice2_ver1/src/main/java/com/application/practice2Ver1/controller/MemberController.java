@@ -24,6 +24,10 @@ import com.application.practice2Ver1.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
+// 1.405 오류 발생 :  Request method 'GET' is not supported]
+//해결 :  @GetMapping("/updateMember")  updateMember가 잘못적혀있었음.
+//2.500 오류 발생 : Error resolving template [member/udpateMember], template might not exist or might not be accessible by any of the configured Template Resolvers
+//3. java.lang.IllegalArgumentException: invalid comparison: java.util.Date and java.lang.String
 @Controller
 @RequestMapping("/member")
 public class MemberController {
@@ -93,13 +97,13 @@ public class MemberController {
 		  return "redirect:/member/mainMember";
 	  }
 	  
-	  @GetMapping("/udpateMember")
-	  public String udpateMember(HttpServletRequest request, Model model) {
+	  @GetMapping("/updateMember")
+	  public String updateMember(HttpServletRequest request, Model model) {
 		  
 		  HttpSession session = request.getSession();// 세션 호출하기
 		  model.addAttribute("memberDTO",memberService.getMemberDetail((String)session.getAttribute("memberId")));
 		  // session.getAttribute 기본 반환값은 object이다-> 형변환필요
-		  return "member/udpateMember";
+		  return "member/updateMember";
 		  
 	  }
 	  
@@ -122,11 +126,13 @@ public class MemberController {
 	  }
 	  
 	  // xml로직 확인하기
-	  
+	  //오류 발생 -> "@{/member/deleteMember" (template: "member/deleteMember" 
+	  // 해결 :  htmldptj th:action=@{}의 중괄호를 제대로 안닫음.
 	  @GetMapping("/deleteMember")
 	  public String deleteMember() { // 해당로직에서는 저장된세션아이디로 정보를 받을 필요가 없다.
-		  return "member/deleteMemeber";
+		  return "member/deleteMember";
 	  }
+	 
 	  
 	  @PostMapping("deleteMember") 
 	  public String deleteMember(HttpServletRequest request) {

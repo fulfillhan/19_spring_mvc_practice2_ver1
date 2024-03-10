@@ -48,14 +48,14 @@
 
 	<div align="center">
 		<h3 th:text="|${session.memberId} 님의 정보 수정!|"></h3>
-		<form th:action="@{/member/updateBoard}"  th:object="${memberDTO}" method="post" enctype="multipart/form-data" >
+		<form th:action="@{/member/updateMember}"  th:object="${memberDTO}" method="post" enctype="multipart/form-data" >
 			<table border="1">
 		         <tr>
 			        <td><img th:src="@{/member/thumbnails(fileName=${memberDTO.profileUUID})}" width="50" height="50" alt="사진"></td>
 			        <td>
 			        	<input type="file" name="uploadProfile"/>
 			        	<input type="hidden" th:field="*{profileUUID}"/>
-			        	<input type="hidden" th:field="*{profileOrginalName}"/>
+			        	<input type="hidden" th:field="*{profileOriginalName}"/>
 			        </td>
 		        </tr>
 				<tr>
@@ -100,14 +100,14 @@
 			        	<input type="button" onclick="javascript:execDaumPostcode()" value="검색"/>
 		                <br><br>
                           도로명 주소:<input type="text" th:field="*{roadAddress}" size="60"/><br>
-                          지번 주소:<input type="text" th:feild="*{jibunAddress}" size="60"><br>
-                          나머지 주소:<input type="text" th:feild="*{namujiAddress}" size="60"/>
+                          지번 주소:<input type="text" th:field="*{jibunAddress}" size="60"><br>
+                          나머지 주소:<input type="text" th:field="*{namujiAddress}" size="60"/>
 			        </td>
 		        </tr>
 		        <tr>
 			        <td>기타</td>
 			        <td>
-			        	<textarea rows="10" cols="10" th:feild="*{etc}"/>
+			        	<textarea rows="10" cols="10" th:field="*{etc}"/>
 			        	<script>CKEDITOR.replace('etc');</script>
 			        </td>
 		        </tr>                                     

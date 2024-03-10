@@ -4,12 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -121,6 +123,12 @@ public class MemberServiceImpl implements MemberService {
 		if(memberDTO.getSmsstsYn() == null) memberDTO.setSmsstsYn("n");
 		if(memberDTO.getEmailstsYn() == null) memberDTO.setSmsstsYn("n");
 		
+	//	System.out.println(memberDTO);
+//MemberDTO(memberId=admin1234, passwd=null, profileOriginalName=boardDetail.htm, 
+//profileUUID=ba7721aa-7096-4094-8111-7fc9f9651644.htm, memberNm=관리자, 
+//sex=m, birthAt=Sat Mar 09 00:00:00 KST 2024, hp=01011112222, smsstsYn=y, email=tkdgml0719@icloud.com,
+//emailstsYn=y, zipcode=14346, roadAddress=1, jibunAddress=1, namujiAddress=1, etc=<p>1234 패스워드입니당</p>
+		//@DateTimeFormat(pattern = "yyyy-MM-dd") 포맷을 했는데도  birthAt=Sat Mar 09 00:00:00 KST 2024 이렇게 나오는 이유는?
 		memberDAO.updateMember(memberDTO);
 	
 	}
@@ -132,29 +140,29 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	@Scheduled(cron="")
+	@Scheduled(cron="59 59 23 * * *")
 	public void getTodayNewMemberCnt() {
 		
-		/*# 시간 출력 형식 SimpleDateFormat
-		 *   
-		 *   - 날짜 및 시간 출력 서식 지정 방법은 SimpleDateFormat 객체를 사용하여 구현한다.
-		 *  - SimpleDateFormat 변수명 = new SimpleDateFormat("날짜 및 시간 서식"); 형태로 객체를 생성한다.
-		 *   - sdf.format(date); 메서드를 사용하여 날짜 표현식을 지정한다.
-		 *   - 상세 서식은 구글에서 "simpledateformat 형식"을 검색하여 사용한다.
-		 *   - 중요)날짜타입 데이터에서 글자타입으로 데이터의 형이 변환된다.*/
-		
-		SimpleDateFormat sdf = new SimpleDateFormat();
-		String today = sdf.format(new Date());//현재 시간 설정
+			SimpleDateFormat sdf = new SimpleDateFormat();
+			String today = sdf.format(new Date());//현재 날짜 설정
 		
 		//logger.info("메시지 작성");
 		logger.info("("+ today+") 신규회원수 : "+ memberDAO.getTodayNewMemberCnt(today));
 	}
 
 	@Override
-	@Scheduled(cron="")
+	@Scheduled(cron = "0 50 23 * * *")
 	public void deleteMemberScheduler() {
-		
-		
+		List<MemberDTO> deletememberList = memberDAO.getInActiveMemberList();// 데이터 베이스에서 비활성화된 유저 리스트 가져오기
+		if (!deletememberList.isEmpty()) {
+			for (MemberDTO memberDTO : deletememberList) {
+				// 각각의 파일 삭제하기
+				File deleteFile = new File(fileRepositoryPath + memberDTO.getProfileUUID());
+				deleteFile.delete();
+				// 각각의 회원 삭제하기
+				memberDAO.deleteMember(memberDTO.getMemberId());
+			}
+		}
 	}
 	
 	

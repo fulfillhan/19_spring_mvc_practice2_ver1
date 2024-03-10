@@ -1,5 +1,7 @@
 package com.application.practice2Ver1.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.application.practice2Ver1.dto.MemberDTO;
@@ -20,4 +22,8 @@ public interface MemberDAO {
 	public void updateInactiveMember(String memberId);// 비활성화 + 시간 수정하기
 
 	public int getTodayNewMemberCnt(String today);
+
+	public List<MemberDTO> getInActiveMemberList();
+
+	public void deleteMember(String memberId);
 }
