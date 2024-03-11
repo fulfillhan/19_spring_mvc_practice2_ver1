@@ -123,14 +123,13 @@ public class MemberServiceImpl implements MemberService {
 		if(memberDTO.getSmsstsYn() == null) memberDTO.setSmsstsYn("n");
 		if(memberDTO.getEmailstsYn() == null) memberDTO.setSmsstsYn("n");
 		
-	//	System.out.println(memberDTO);
+		System.out.println(memberDTO);
 //MemberDTO(memberId=admin1234, passwd=null, profileOriginalName=boardDetail.htm, 
 //profileUUID=ba7721aa-7096-4094-8111-7fc9f9651644.htm, memberNm=관리자, 
 //sex=m, birthAt=Sat Mar 09 00:00:00 KST 2024, hp=01011112222, smsstsYn=y, email=tkdgml0719@icloud.com,
 //emailstsYn=y, zipcode=14346, roadAddress=1, jibunAddress=1, namujiAddress=1, etc=<p>1234 패스워드입니당</p>
-		//@DateTimeFormat(pattern = "yyyy-MM-dd") 포맷을 했는데도  birthAt=Sat Mar 09 00:00:00 KST 2024 이렇게 나오는 이유는?
+		//@DateTimeFormat(pattern = "yyyy-MM-dd") 포맷을 했는데도  birthAt=Sat Mar 09 00:00:00 KST 2024 이렇게 나옴
 		memberDAO.updateMember(memberDTO);
-	
 	}
 
 	@Override
