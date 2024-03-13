@@ -36,7 +36,7 @@ public class BoardAdvanceController {
 		  // 입력된 값에 따라 게시판의 글의 갯수를 가지고온다.
 		  int allViewCnt = boardAdvanceService.getAllViewCnt(searchNewMap);
 		
-		  
+		  //업데이트 필요
 		  
 		return "boardAdvance/boardList";
 	}
