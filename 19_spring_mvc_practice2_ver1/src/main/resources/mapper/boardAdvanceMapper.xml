@@ -1,3 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.application.practice2Ver1.boardAdvance.dao.BoardAdvanceDAO"></mapper>
+<mapper namespace="com.application.practice2Ver1.boardAdvance.dao.BoardAdvanceDAO">
+<select id="getAllViewCnt" parameterType="hashmap" resultType="int">
+<choose>
+	<when test="searchKeyword ='total'">
+		<choose>
+			<when test="searchWord = ''">
+				SELECT 
+						COUNT(*)
+				FROM 
+						MAIN_BOARD
+			</when>
+			<otherwise>
+			SELECT 
+					COUNT(*)
+			FROM 
+					MAIN_BOARD
+			WHERE
+					SUBJECT LIKE CONCAT('%',#{searchWord}, '%') OR
+					WRTIER LIKE CONCAT('%', #{serachWord}, '%')
+			</otherwise>	
+		</choose>
+	</when>
+</choose>
+</select>
+</mapper>

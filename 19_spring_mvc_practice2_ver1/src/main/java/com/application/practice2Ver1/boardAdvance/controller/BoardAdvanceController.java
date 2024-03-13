@@ -32,17 +32,20 @@ public class BoardAdvanceController {
 		  //put - hashmap의 key에 value 을 할당한다
 		  searchNewMap.put("searchKeyword", searchKeyword);
 		  searchNewMap.put("searchWord", searchWord);
+		  
+		  // 입력된 값에 따라 게시판의 글의 갯수를 가지고온다.
+		  int allViewCnt = boardAdvanceService.getAllViewCnt(searchNewMap);
 		
 		  
 		  
 		return "boardAdvance/boardList";
 	}
-	
+//	
 //	@PostMapping("/boardList")
 //	public String boardList() {
 //		
 //	}
-//	
+	
 	
 	
 	
