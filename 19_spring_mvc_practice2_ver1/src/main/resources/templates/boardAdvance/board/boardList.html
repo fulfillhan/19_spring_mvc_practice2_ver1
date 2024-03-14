@@ -76,7 +76,8 @@
 			</tr>
 			<tbody id="boardList">
 				<tr align="center" th:each="mainBoardDTO: ${boaardList}">
-					<td th:text="${startPage+mainBoardDTOStat.count"></td>
+			
+					<td th:text="${startPage+mainBoardDTOStat.count"></td><!-- 0+1~/2페이지 10+1~ -->
 					<td><a href="@{/boardAdvance/boardDetail(boardId=${mainBoardDTO.boardId})}"></a></td>
 					<td th:text="${mainBoardDTO.writer"></td>
 					<td th:text="${#dates.format(mainBoardDTO.enrollAt,'yyyy-MM-dd')}"></td>
