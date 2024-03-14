@@ -21,8 +21,20 @@
 <script>
 	
 	$(function(){
-		
+		$("#onePageViewCnt").val("[[${onePageViewCnt}]]");
+		$("#searchKeyword").val("[[${searchKeyword}]]");
 	});
+	
+	function getBoardList(currentPageNumber){
+		let url="/boardAdvanced/boardList";
+		url += "?searchKeyword="+ $("#searchKeyword").val();
+		url += "&searchWord="+$("#searchWord").val();
+		url += "&onePageViewCnt="+$("#onePageViewCnt").val();
+		if(currentPageNumber != nul){
+			url += "&currentPageNumber="+currentPageNumber;
+		}
+		location.href= url;
+	}
 	
 	
 </script>
@@ -45,7 +57,7 @@
 			</colgroup>
 			<tr>
 				<td> 
-					조회 : <span style="color:red" ></span>개
+					조회 : <span style="color:red" th:text="${allBoardCnt}"></span>개
 				</td>
 				<td colspan="4" align="right" >
 					<select id="onePageViewCnt" onchange="getBoardList()" >
@@ -63,13 +75,17 @@
 					<td>조회수</td>
 			</tr>
 			<tbody id="boardList">
-				<tr align="center">
-				
+				<tr align="center" th:each="mainBoardDTO: ${boaardList}">
+					<td th:text="${startPage+mainBoardDTOStat.count"></td>
+					<td><a href="@{/boardAdvance/boardDetail(boardId=${mainBoardDTO.boardId})}"></a></td>
+					<td th:text="${mainBoardDTO.writer"></td>
+					<td th:text="${#dates.format(mainBoardDTO.enrollAt,'yyyy-MM-dd')}"></td>
+					<td th:text="${mainBoardDTO.readCnt"></td>
 				</tr>
 			</tbody>
 			<tr align="right">
 				<td colspan="5">
-					<input type="button" value="글쓰기" >
+					<input type="button" value="글쓰기"  th:onclick="|location.href='@{/boardAdvance/createBoard}'|">
 				</td>
 			</tr>
 			<tr>
@@ -85,8 +101,17 @@
 			</tr>
 		</table>
 		<div style="display: table; margin-left: auto; margin-right: auto">
+			<!--페이징 view-->
 			<ul>
-				
+				<li th:if="&{startPage > 10}">
+					<a th:href="|javaScript:getBoardList(${startPage-10})|">이전</a>
+				</li>
+				<li th:each="i : ${numbers.sequence(startPage, endPage)}">
+					<a th:href="|javaScript:getBoardList(${i})|" th:text="${i}"></a>
+				</li>
+				<li th:if="${endPage != allPageCnt && endPage >= 10}">
+					<a th:href="|javaScript:getBoardList(endPage+10)|">다음</a>					
+				</li>
 			</ul>
 		</div>
 	</div>

@@ -22,6 +22,25 @@
 			</otherwise>	
 		</choose>
 	</when>
+	<otherwise>
+	 SELECT
+	 		COUNT(*)
+	FROM
+			MAIN_BOARD
+	WHERE 
+			<if test="searchKeyword.equals('subject')">
+			 SUBJECT LIKE CONCAT('%', #{searchWord}, '%')
+			</if>
+			<if test="searchKeyword.equals('writer')">
+			WRITER LIKE CONCAT('%', #{searchWord}, '%')
+			</if>
+	</otherwise>
 </choose>
 </select>
+
+<select id="getBoardList" parameterType="hashmap" resultType="MainBoardDTO">
+ 
+</select>
+
+
 </mapper>
