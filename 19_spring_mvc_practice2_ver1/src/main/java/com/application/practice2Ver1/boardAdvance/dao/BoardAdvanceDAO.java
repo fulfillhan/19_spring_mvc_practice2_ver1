@@ -14,4 +14,6 @@ public interface BoardAdvanceDAO {
 
 	public List<MainBoardDTO> getBoardList(Map<String, Object> searchMap);
 
+	public void createBoard(MainBoardDTO mainBoardDTO);
+
 }

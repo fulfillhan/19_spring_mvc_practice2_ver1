@@ -11,4 +11,8 @@ public interface BoardAdvanceService {
 
 	public List<MainBoardDTO> getBoardList(Map<String, Object> searchMap);
 
+	public void createBoard(MainBoardDTO mainBoardDTO);
+
+	public MainBoardDTO getBoardDetail(long boardId, boolean isIncreaseReadCnt);
+
 }

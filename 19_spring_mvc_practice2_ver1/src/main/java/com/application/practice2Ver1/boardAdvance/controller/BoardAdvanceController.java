@@ -7,10 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.application.practice2Ver1.boardAdvance.dto.MainBoardDTO;
 import com.application.practice2Ver1.boardAdvance.service.BoardAdvanceService;
 
 @Controller
@@ -81,13 +83,28 @@ public class BoardAdvanceController {
 		  
 		return "boardAdvance/boardList";
 	}
-//	
-//	@PostMapping("/boardList")
-//	public String boardList() {
-//		
-//	}
+	
+	@GetMapping("/createBoard")
+	public String createBoard() {
+		return "boardAdvance/createBoard";
+	}
+	
+	@PostMapping("/createBoard")
+	public String createBoard(@ModelAttribute MainBoardDTO mainBoardDTO) {
+		boardAdvanceService.createBoard(mainBoardDTO);
+		return "redirect:/boardAdvance/boardList";
+	}
 	
 	
+	
+	  @GetMapping("/boardDetail") 
+	  public String boardDetail(Model model, @RequestParam("boardId") long boardId) { 
+	 // boardAdvanceService.getBoardDetail(boardId); 
+		  
+	  model.addAttribute("mainBoardDTO", boardAdvanceService.getBoardDetail(boardId, true));  // 게시글상세 가져오기
+	  return "boardAdvance/boardDetail";
+	 
+	  }
 	
 	
 

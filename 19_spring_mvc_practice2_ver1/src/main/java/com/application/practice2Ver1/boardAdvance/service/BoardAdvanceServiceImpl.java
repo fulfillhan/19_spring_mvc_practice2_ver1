@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.application.practice2Ver1.boardAdvance.dao.BoardAdvanceDAO;
 import com.application.practice2Ver1.boardAdvance.dto.MainBoardDTO;
@@ -29,6 +30,23 @@ public class BoardAdvanceServiceImpl implements BoardAdvanceService {
 	public List<MainBoardDTO> getBoardList(Map<String, Object> searchMap) {
 		
 		return boardAdvanceDAO.getBoardList(searchMap);
+	}
+
+	@Override
+	public void createBoard(MainBoardDTO mainBoardDTO) {
+		boardAdvanceDAO.createBoard(mainBoardDTO);
+	}
+
+	
+	@Override
+	@Transactional
+	public MainBoardDTO getBoardDetail(long boardId, boolean isIncreaseReadCnt) {
+		// 상세 게시글 가져오기 + 조회수 증가하기
+		
+//		if(isIncreaseReadCnt) {
+//			boardAdvanceDAO.updateReadCnt();
+//		}
+		return null;
 	}
 	
 	

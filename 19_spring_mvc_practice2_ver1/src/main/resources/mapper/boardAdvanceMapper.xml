@@ -39,8 +39,68 @@
 </select>
 
 <select id="getBoardList" parameterType="hashmap" resultType="MainBoardDTO">
- 
+ 	<choose>
+ 		<when test="searchKeyword.equals('total')">
+ 			<choose>
+ 			<when test="searchWord.eqals('')">
+ 				SELECT
+ 						*
+				FROM
+						MAIN_BOARD
+				ORDER_BY
+						ENROLL_AT DESC
+				LIMIT
+						#{startBoardIdx},#{onePageViewCnt}
+ 			</when>
+ 			<otherwise>
+ 				SELECT 
+ 						*
+				FROM
+						MAIN_BOARD
+				WHERE 
+						SUBJECT LIKE CONCAT('%', #{searchWord}, '%') OR
+						WIRTER LIKE CONCAT('%', #{searchWord}, '%')
+				ORDER_BY
+						ENROLL_AT DESC
+				LIMIT
+						#{startBoardIdx},#{onePageViewCnt}
+ 				</otherwise>
+ 			</choose>
+ 		</when>
+ 		<otherwise>
+ 			 SELECT 
+ 			 		*
+	 		 FROM MAIN_BOARD
+	 		 WHERE
+		 		 <if test="searchKeyword.equals('subject')">
+		 		 		SUBJECT LIKE CONCAT('%', #{searchKeyword}, '%')
+		 		 </if>
+		 		 <if test="searchKeyword.equals('writer')">
+		 		 	WRITER LIKE CONCAT('%', #{searchWord}, '%')
+		 		 </if>
+	 		 ORDER_BY 
+	 		 		ENROLL_AT DESC
+	 		LIMIT
+	 				#{startBoardIdx},#{onePageViewCnt}
+ 			</otherwise>
+ 	</choose>
 </select>
+
+<insert id="createBoard" parameterType="MainboardDTO">
+INSERT INTO MAIN_BOARD(
+	WRITER,
+	SUBJECT,
+	PASSWD,
+	CONTENT
+)
+VALUES(
+	#{writer},
+	#{subject},
+	#{passwd},
+	#{content}
+)
+
+</insert>
 
 
 </mapper>

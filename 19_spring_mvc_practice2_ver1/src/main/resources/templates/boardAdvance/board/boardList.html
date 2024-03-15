@@ -42,7 +42,7 @@
 <body>
 
 	<p align="right">
-		<input type="button" value="테스트 데이터 생성">
+		<input type="button" value="테스트 데이터 생성" >
 	</p>
 
 	<div align="center" style="padding-top: 100px" >
@@ -77,7 +77,7 @@
 			<tbody id="boardList">
 				<tr align="center" th:each="mainBoardDTO: ${boaardList}">
 			
-					<td th:text="${startPage+mainBoardDTOStat.count"></td><!-- 0+1~/2페이지 10+1~ -->
+					<td th:text="${startBoardIdx+mainBoardDTOStat.count"></td><!-- 0+1~/2페이지 10+1~ -->
 					<td><a href="@{/boardAdvance/boardDetail(boardId=${mainBoardDTO.boardId})}"></a></td>
 					<td th:text="${mainBoardDTO.writer"></td>
 					<td th:text="${#dates.format(mainBoardDTO.enrollAt,'yyyy-MM-dd')}"></td>
