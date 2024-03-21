@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.application.practice2Ver1.boardAdvance.dto.MainBoardDTO;
+import com.application.practice2Ver1.boardAdvance.dto.ReplyDTO;
 import com.application.practice2Ver1.boardAdvance.service.BoardAdvanceService;
 
 @Controller
@@ -63,7 +65,7 @@ public class BoardAdvanceController {
 		  // searchWord,searchKeyword, onePageViewCnt, 
 		  Map<String, Object> searchMap = new HashMap<String, Object>();
 		  searchMap.put("startBoardIdx", startBoardIdx); // 시작하는 게시물의 인덱스
-		  searchMap.put("searchWord", searchWord);
+		  searchMap.put("searchKeyword", searchKeyword);
 		  searchMap.put("searchWord", searchWord);
 		  searchMap.put("onePageViewCnt", onePageViewCnt);
 		  model.addAttribute("boardList", boardAdvanceService.getBoardList(searchMap));
@@ -81,12 +83,12 @@ public class BoardAdvanceController {
 		  
 		  
 		  
-		return "boardAdvance/boardList";
+		return "boardAdvance/board/boardList";
 	}
 	
 	@GetMapping("/createBoard")
 	public String createBoard() {
-		return "boardAdvance/createBoard";
+		return "boardAdvance/board/createBoard";
 	}
 	
 	@PostMapping("/createBoard")
@@ -94,18 +96,158 @@ public class BoardAdvanceController {
 		boardAdvanceService.createBoard(mainBoardDTO);
 		return "redirect:/boardAdvance/boardList";
 	}
-	
-	
+
 	
 	  @GetMapping("/boardDetail") 
 	  public String boardDetail(Model model, @RequestParam("boardId") long boardId) { 
 	 // boardAdvanceService.getBoardDetail(boardId); 
 		  
 	  model.addAttribute("mainBoardDTO", boardAdvanceService.getBoardDetail(boardId, true));  // 게시글상세 가져오기
-	  return "boardAdvance/boardDetail";
-	 
+	  // 상세게시글 안에 전체 리뷰수 가져오기, 리뷰 목록 가져오기
+	  model.addAttribute("allReplyCnt", boardAdvanceService.allReplyCnt(boardId));
+	  model.addAttribute("replyList", boardAdvanceService.getReplyList(boardId));
+	  
+	  return "boardAdvance/board/boardDetail";
 	  }
 	
-	
+	  @GetMapping("/boardAuthentication")
+	  public String boardAuthentication(Model model, @RequestParam("boardId") long boardId, @RequestParam("menu") String menu) {
+		  //boardAdvanceService.getBoardDetail(boardId, false);
+		  model.addAttribute("mainBoardDTO",boardAdvanceService.getBoardDetail(boardId, false));
+		  model.addAttribute("menu", menu);
+		  return "boardAdvance/board/authentication";
+	  }
+	  
+	  @PostMapping("/boardAuthentication")
+	  @ResponseBody
+	  public String boardAuthentication(@ModelAttribute MainBoardDTO mainBoardDTO, @RequestParam("menu") String menu) {
+		  //boardAdvanceService.isAuthorized(mainBoardDTO);
+		  
+		  String jString = "";
+		  if(boardAdvanceService.isAuthorized(mainBoardDTO)) {
+			  if(menu.equals("update")) {
+				  jString = "<script>";
+				  jString += "alert('인증되었습니다.');";
+				  jString += "location.href='/boardAdvance/board/updateBoard?boardId="+mainBoardDTO.getBoardId()+"';";
+				  jString += "</script>";
+			  }else if (menu.equals("delete")) {
+				  jString = "<script>";
+				  jString += "alert('인증되었습니다.');";
+				  jString += "location.href='/boardAdvance/board/deleteBoard?boardId="+mainBoardDTO.getBoardId()+"';";
+				  jString += "</script>";
+			}
+		  }
+		  else {
+			jString="""
+					<script> 
+				   alert('아이디와 패스워드를 확인하세요');
+				   history.go(-1);
+					 </script>
+					""";
+		}
+		  return jString;
+	  }
+	  
+	  @GetMapping("/updateBoard")
+	  public String updateBoard(Model model, @RequestParam("boardId") long boardId) {
+		  model.addAttribute("mainBoardDTO", boardAdvanceService.getBoardDetail(boardId, false));
+		  return "boardAdvance/board/updateBoard";
+	  }
+	  
+	  @PostMapping("/updateBoard")
+	  public String updateBoard(@ModelAttribute MainBoardDTO mainBoardDTO) {
+		  boardAdvanceService.updateBoard(mainBoardDTO);
+		  return "boardAdvance/board/boardList";
+	  }
+	  
+	  @GetMapping("/deleteBoard")
+	  public String deleteBoard(@RequestParam("boardId") long boardId, Model model) {
+		  model.addAttribute("boardId", boardId);
+		  return "boardAdvance/board/deleteBoard";
+	  }
+	  
+	  @PostMapping("/deleteBoard")
+	  public String deleteBoard(@RequestParam("boardId")long boardId) {
+		  boardAdvanceService.deleteBoard(boardId);
+		  return "boardAdvance/board/deleteBoard";
+	  }
+	  
+	  @GetMapping("/createBoardDummy")
+	  public String createBoardDummy() {
+		  boardAdvanceService.createBoardDummy();
+		  return "redirect:/boardAdvance/boardList";
+	  }
+	  
+	  
+	  @GetMapping("/createReply")
+	  public String createReply(@RequestParam("boardId")long boardId, Model model) {
+		model.addAttribute("boardId", boardId);
+		return "boardAdvance/reply/createReply";
+		  
+	  }
+	  
+	  @PostMapping("/createReply")
+	  public String createReply(@ModelAttribute ReplyDTO replyDTO) {
+		  boardAdvanceService.createReply(replyDTO);
+		  return "redirect:/boardAdvance/boardDetail?boardId="+replyDTO.getBoardId();
+	  }
+	  
+	  @GetMapping("/udpateReply")
+	  public String udpateReply(@RequestParam("replyId") long replyId, Model model) {
+		  model.addAttribute("replyDTO", boardAdvanceService.getReplyDetail(replyId));
+		  return "boardAdvance/reply/updateReply";
+	  }
+	  
+	  // name="passwd name="content" name="write name="boardId" name="replyId
+	  @PostMapping("/udpateReply")
+	  @ResponseBody
+	  public String udpateReply(ReplyDTO replyDTO) {
+		  //boardAdvanceService.udpateReply(replyDTO);
+		  
+		  String jString ="";
+		  if(boardAdvanceService.udpateReply(replyDTO)) {
+			  jString += "<script>";
+			  jString += "location.href='/boardAdavance/boardDetail?boardId='"+replyDTO.getBoardId()+";";
+			  jString += "</script>";
+		  }
+		  jString="""
+		  		 <script> 
+			   alert('아이디와 비번을 확인해주세요');
+			   history.go(-1);
+		   </script>
+		  		""";
+		  
+		  return jString;
+	  }
+	  
+	  @GetMapping("/deleteReply")
+	  public String deleteReply(@RequestParam("replyId") long replyId, Model model) {
+		  model.addAttribute("replyDTO", boardAdvanceService.getReplyDetail(replyId));
+		  return "boardAdvance/reply/deleteReply";
+	  }
+	  
+	  @PostMapping("/deleteReply")
+	  @ResponseBody
+	  public String deleteReply(@ModelAttribute ReplyDTO replyDTO) {
+		 boolean deleteReply =  boardAdvanceService.deleteReply(replyDTO);
+		 
+		 String jString = "";
+		if(deleteReply) {
+			jString += "<script>";
+			jString += "location.href='/boardAdvance/boardDetail?boardId=" + replyDTO.getBoardId() + "';";
+			jString += "</script>";
+		}
+		else {
+			jString = """
+					   <script> 
+						   alert('아이디와 패스워드를 확인하세요!');
+						   history.go(-1);
+					   </script>""";
+		}
+		 return jString;
+	  }
+	  
+	  
+	  
 
 }

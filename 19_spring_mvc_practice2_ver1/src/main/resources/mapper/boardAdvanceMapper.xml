@@ -3,9 +3,9 @@
 <mapper namespace="com.application.practice2Ver1.boardAdvance.dao.BoardAdvanceDAO">
 <select id="getAllViewCnt" parameterType="hashmap" resultType="int">
 <choose>
-	<when test="searchKeyword ='total'">
+	<when test='searchKeyword = "total"'>
 		<choose>
-			<when test="searchWord = ''">
+			<when test='searchWord.equals("")'>
 				SELECT 
 						COUNT(*)
 				FROM 
@@ -39,52 +39,54 @@
 </select>
 
 <select id="getBoardList" parameterType="hashmap" resultType="MainBoardDTO">
- 	<choose>
- 		<when test="searchKeyword.equals('total')">
- 			<choose>
- 			<when test="searchWord.eqals('')">
- 				SELECT
- 						*
+		<choose>
+			<when test='searchKeyword.equals("total")'>
+				<choose>
+					<when test='searchWord.equals("")'>
+						SELECT
+								*
+						FROM
+								MAIN_BOARD
+						ORDER BY
+								ENROLL_AT DESC
+						LIMIT 
+								#{startBoardIdx},#{onePageViewCnt}
+					</when>
+					<otherwise>
+						SELECT 
+								*
+						FROM
+								MAIN_BOARD
+						WHERE
+								SUBJECT LIKE CONCAT('%' , #{searchWord} , '%') OR
+								WRITER LIKE CONCAT('%' , #{searchWord} , '%')
+						ORDER BY
+								ENROLL_AT DESC
+						LIMIT 
+								#{startBoardIdx},#{onePageViewCnt}
+					</otherwise>
+					</choose>
+				</when>
+			<otherwise>
+				SELECT
+						*
 				FROM
 						MAIN_BOARD
-				ORDER_BY
+				WHERE
+					<if test='searchKeyword.equals("writer")'>
+						WRITER LIKE CONCAT('%' , #{searchWord} , '%')
+					</if>
+					<if test='searchKeyword.equals("subject")'>
+						SUBJECT LIKE CONCAT('%' , #{searchWord} , '%')
+					</if>
+				ORDER BY
 						ENROLL_AT DESC
 				LIMIT
-						#{startBoardIdx},#{onePageViewCnt}
- 			</when>
- 			<otherwise>
- 				SELECT 
- 						*
-				FROM
-						MAIN_BOARD
-				WHERE 
-						SUBJECT LIKE CONCAT('%', #{searchWord}, '%') OR
-						WIRTER LIKE CONCAT('%', #{searchWord}, '%')
-				ORDER_BY
-						ENROLL_AT DESC
-				LIMIT
-						#{startBoardIdx},#{onePageViewCnt}
- 				</otherwise>
- 			</choose>
- 		</when>
- 		<otherwise>
- 			 SELECT 
- 			 		*
-	 		 FROM MAIN_BOARD
-	 		 WHERE
-		 		 <if test="searchKeyword.equals('subject')">
-		 		 		SUBJECT LIKE CONCAT('%', #{searchKeyword}, '%')
-		 		 </if>
-		 		 <if test="searchKeyword.equals('writer')">
-		 		 	WRITER LIKE CONCAT('%', #{searchWord}, '%')
-		 		 </if>
-	 		 ORDER_BY 
-	 		 		ENROLL_AT DESC
-	 		LIMIT
-	 				#{startBoardIdx},#{onePageViewCnt}
- 			</otherwise>
- 	</choose>
-</select>
+						#{startBoardIdx} , #{onePageViewCnt}
+			</otherwise>
+		</choose>
+	</select>
+	
 
 <insert id="createBoard" parameterType="MainboardDTO">
 INSERT INTO MAIN_BOARD(
@@ -101,6 +103,125 @@ VALUES(
 )
 
 </insert>
+<update id="updateReadCnt" parameterType="long">
+ 	UPDATE 
+ 			MAIN_BOARD
+ 	SET 
+ 			READ_CNT = READ_CNT + 1
+ 	WHERE 
+ 			BOARD_ID = #{boardId}
+</update>
 
+<select id="getBoardDetail" parameterType="long" resultType="MainBoardDTO">
+SELECT 	
+		*
+FROM 
+		MAIN_BOARD
+WHERE 
+		BOARD_ID=#{boardId}
+</select>
 
+<select id="getAllReplyCnt" parameterType="long" resultType="int">
+SELECT
+		 COUNT(*)
+FROM 
+		REPLY
+WHERE 
+		BOARD_ID = #{boardId}
+</select>
+
+<select id="getReplyList" parameterType="long" resultType="ReplyDTO">
+	SELECT 
+			*
+	FROM 
+			REPLY
+	WHERE 
+			BOARD_ID = #{boardId}
+</select>
+
+<select id="getEncodedPasswd" parameterType="long" resultType="String">
+	SELECT 
+			PASSWD
+	FROM
+			MAIN_BOARD
+	WHERE 
+			BOARD_ID = #{boardId}
+</select>
+<update id="updateBoard" parameterType="mainBoardDTO">
+	UPDATE 
+			MAIN_BOARD
+	SET 
+		WRITER = #{writer},
+		SUBJECT = #{subject},
+		CONTENT = #{content},
+		ENROLL_AT =NOW()
+	WHERE
+			BOARD_ID = #{boardId}
+</update>
+<delete id="deleteBoard" parameterType="long">
+	DELETE FROM
+				MAIN_BOARD
+	WHERE 
+			BOARD_ID=#{boardId}
+</delete>
+
+<insert id="createReply" parameterType="ReplyDTO">
+INSERT INTO REPLY(
+	WRITER,
+	PASSWD,
+	CONTENT,
+	BOARD_ID
+)
+VALUES(
+	#{writer},
+	#{passwd},
+	#{content},
+	#{boardId}
+)
+</insert>
+
+<select id="getReplyDetail" parameterType="long" resultType="ReplyDTO">
+	SELECT 
+			*
+	FROM
+			REPLY
+	WHERE
+			REPLY_ID = #{replyId}
+</select>
+
+<update id="updateReply" parameterType="ReplyDTO">
+UPDATE 
+		REPLY
+SET
+		WRITER = #{writer},
+		CONTENT = #{content}
+		ENROLL_AT = NOW()
+WHERE
+		REPLY_ID = #{replyId}
+</update>
+
+<delete id="deleteReply" parameterType="long">
+DELETE FROM 
+		REPLY
+WHERE 
+		REPLY_ID = #{replyId}
+</delete>
+
+<insert id="createDummy" parameterType="MainBoardDTO">
+		INSERT INTO MAIN_BOARD (
+				WRITER,
+				SUBJECT,
+				CONTENT,
+				PASSWD
+		)
+		VALUES
+		<foreach collection="list" item="mainBoardDTO" separator=",">
+			(
+				#{mainBoardDTO.writer}, 
+				#{mainBoardDTO.subject}, 
+				#{mainBoardDTO.content}, 
+				#{mainBoardDTO.passwd} 
+			)
+		</foreach>
+	</insert>
 </mapper>
